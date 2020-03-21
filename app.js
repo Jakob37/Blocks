@@ -1,63 +1,62 @@
-var settings = require("./settings.js");
+const settings = require("./settings.js");
+const db = require("./db.js");
+const test_entries = require("./test_entries.js");
 
-console.log(settings.myDateTime());
-
-var express = require("express");
-var app = express();
-var port = 3000;
-
-// https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database
-
+const express = require("express");
+const app = express();
+const port = 3000;
 const {MongoClient} = require('mongodb');
 
-const mongo_path = settings.get_mongo_path();
+// var expressMongoDb = require("express-mongo-db");
+// app.use(expressMongoDb(settings.get_mongo_path()));
 
-async function main(){
-    /**
-     * Connection URI. Update <username>, <password>, and <your-cluster-url> to reflect your cluster.
-     * See https://docs.mongodb.com/ecosystem/drivers/node/ for more details
-     */
-    const uri = mongo_path;
+// async function main(){
+//     const client = new MongoClient(settings.get_mongo_path());
+//
+//     try {
+//         await client.connect();
+//         // await setupStorage(client, example_entry1);
+//         // await setupStorage(client, example_entry2);
+//         await db.addEntry(client, test_entries.getTestEntries()[1]);
+//         await db.listDatabases(client);
+//         await db.retrieveBlockEntries(client);
+//
+//     } catch (e) {
+//         console.error(e);
+//     } finally {
+//         await client.close();
+//     }
+// }
+// main().catch(console.error);
 
-    const client = new MongoClient(uri);
+app.get("/", async (req, res) => {
 
+    const client = new MongoClient(settings.get_mongo_path());
     try {
-        // Connect to the MongoDB cluster
-        await client.connect();
-
-        // Make the appropriate DB calls
-        await  listDatabases(client);
-
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await client.close();
+        const out = await db.listDatabases(client);
+        console.log(out);
+    } catch (err) {
+        res.status(500).json({ message: err.message })
     }
-}
 
-main().catch(console.error);
+    // console.log)
+    // db.listDatabases(db.getClient());
+    // console.log(req.db("block_test").collection("time_entries"));
+    // db.listDatabasesDb(req.db);
 
-async function listDatabases(client){
-    databasesList = await client.db().admin().listDatabases();
-
-    console.log("Databases:");
-    databasesList.databases.forEach(db => console.log(` - ${db.name}`));
-};
-
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/index.html");
+    // res.sendFile(__dirname + "/index.html");
 });
-
-app.post("/addname", (req, res) => {
-    var myData = new User(req.body);
-    myData.save()
-        .then(item => {
-            res.send("item saved to database");
-        })
-        .catch(err => {
-            res.status(400).send("unable to save to database");
-        });
-});
+//
+// app.post("/addname", (req, res) => {
+//     var myData = new User(req.body);
+//     myData.save()
+//         .then(item => {
+//             res.send("item saved to database");
+//         })
+//         .catch(err => {
+//             res.status(400).send("unable to save to database");
+//         });
+// });
 
 app.listen(port, () => {
     console.log("Server listening to port " + port);
