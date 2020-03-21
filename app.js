@@ -1,26 +1,10 @@
-//import {get_mongo_path} from "./settings.js";
-require("./settings.js");
+var settings = require("./settings.js");
+
+console.log(settings.myDateTime());
 
 var express = require("express");
 var app = express();
 var port = 3000;
-
-// Used to convert user input into JSON format
-// Maybe not needed later
-// var bodyParser = require('body-parser');
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-//
-// var mongoose = require("mongoose");
-// mongoose.Promise = global.Promise;
-// mongoose.connect("mongodb://localhost:27017/node-demo");
-//
-// var nameSchema = new mongoose.Schema({
-//     firstName: String,
-//     lastNameName: String
-// });
-//
-// var User = mongoose.model("User", nameSchema);
 
 // https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb--how-to-get-connected-to-your-database
 
